@@ -1,0 +1,33 @@
+>>>>>>>>>>>>>>> 	1a etapa	<<<<<<<<<<<<<<<
+
+4 3 >> 4 vertices , 3 arestas 
+//ler as arestas
+1 2
+2 3
+2 4
+1 3 >> 1 inimigo, inimigo
+1 4
+>>>>>>>>>>>>>>		2a etapa	<<<<<<<<<<<<<<<
+//cada vertice eh um grafo, leia o grafo
+//ler vertice 1 aka sistema planetario 1
+4 2
+3 2 4 // linka vertice 3 com 2 peso 4
+2 1 5 
+//ler vertice 2 aka sistema planetario 2
+5 3
+1 5 1 // linka vertice 1 com 5  peso 1
+2 1 0
+3 4 2 
+//ler vertice 3 aka sistema planetario 3
+6 4
+3 2 4 // linka vertice 3 com 2  peso 4
+2 1 5
+2 3 0
+3 4 2
+//ler vertice 4 aka sistema planetario 4
+5 5
+2 1 5 // linka vertice 2 com 1  peso 5
+2 3 0
+3 4 2
+3 5 6
+4 5 9
