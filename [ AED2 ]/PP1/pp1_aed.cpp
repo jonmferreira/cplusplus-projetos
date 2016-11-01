@@ -136,10 +136,8 @@ public:
 
 	void enfileira(T valor ){
 	
-    	Posicao<T>* aux = new Posicao<T>;
-    	aux->setValor( valor );
-    	
-    	tras->setProx( aux );
+    	tras->setValor( valor );
+    	tras->setProx( new Posicao<T> );
     	tras = tras->getProx();
 	}
 
@@ -147,15 +145,13 @@ public:
 	void desenfileira( T &x){
 	
     	if( not filaVazia() ){
-    	
-        	Posicao<T> *aux = frente;
+    		
+    		Posicao<T> *aux = frente;
+    		x = frente->getValor();
         	frente = frente->getProx();
-        	x = frente->getValor();
         	delete aux;
     	}
 	}
-
-
 };
 
 
@@ -177,7 +173,7 @@ class Grafo{
         void dfs( int origem, vector<bool>& visitado ){
 
             if( not visitado[origem] ){
-                //cout << "rodou um dfs no vertice: "<<origem<< endl;
+                cout << " "<<origem<<" ";
                 visitado[origem] = true;
                 Vertice planeta = vertices[origem];
                 for( int i=0; i< planeta.arestasAdjacentes.size();i++){
@@ -188,11 +184,10 @@ class Grafo{
                         //cout << "custo acumulado deste sistema ate aqui::"<< custoTotalDFS <<endl;
                         custoTotalDFS += caminho.peso;
                         //cout<<"custo passa a ser : "<< custoTotalDFS<<endl;
-                        dfs(caminho.vertice, visitado);
+                        dfs( caminho.vertice, visitado );
                     }
                 }
             }
-
         }
 
 
@@ -205,7 +200,9 @@ class Grafo{
                 fezBuscaDFS = true;
                 custoTotalDFS=0;
                 //cout <<"\npassei por aqui"<<endl;
+               	cout << "rodou um dfs nos vertices: ";
                 dfs(1, visitados);
+                cout<< endl;
             }
         }
 
@@ -273,6 +270,9 @@ class StarTrek_PP1_Desfecho {
 		vector<Grafo>		sistemasPlanetarios;
 		vector<int>			sistemasInimigos;
 		double 				custoMenor;
+		
+		vector<int>			visitado;
+		vector<int>			distancia;
 
 
 		void fazExploracao(vector<int>& visitado){
@@ -282,6 +282,7 @@ class StarTrek_PP1_Desfecho {
 					Grafo* sistema = &sistemasPlanetarios[i];
 					//cout << "somando custos:\n sistema a ser analisado: "<< i<<endl;
 					//cout <<"custo ate aqui da galaxia: "<<custoMenor;
+					cout<< "vizitando sistema : "<< i<<endl;
 					custoMenor += (sistema->getCustoDFS());
 					//cout << "\n O custo apos analise:: "<< custoMenor<<endl;
 				}
@@ -295,14 +296,25 @@ class StarTrek_PP1_Desfecho {
 
 			for(int i=0; i < sistemasInimigos.size()  and ehAliado ; i++ ){
 
-				ehAliado = sistemaID != sistemasInimigos[ i ] and ehAliado;
+				ehAliado = ( sistemaID != sistemasInimigos[ i ] ) and ehAliado;
 			}
 			return ehAliado;
 		}
+		
+		
+		bool foiVisitado(int elem){
+			
+			bool foi = false;
+			int dimensaoVisitado = (int)visitado.size();
+			for( int i=0; i < dimensaoVisitado and not foi;i++ ){
+				
+				foi = ( visitado[i] == elem ) and not foi;
+			}
+			return foi;
+		}
 
 
-		void bfsBFS( vector<double>& distancias, vector<int>& visitado,
-							Fila< Aresta >& fila){
+		void bfsBFS( Fila< Aresta >& fila){
 
 			bool fezexploracao = false;
 			while( not fila.filaVazia() and not fezexploracao ){
@@ -310,9 +322,9 @@ class StarTrek_PP1_Desfecho {
 				Aresta 		aresta;
 				fila.desenfileira(aresta);
 				int 		sistemaAtual = aresta.vertice;
-				if( not visitado[ sistemaAtual ] and ehAmigo(sistemaAtual) ){
+				if( not foiVisitado(sistemaAtual) and ehAmigo(sistemaAtual) ){
 
-					visitado [ sistemaAtual ] = true;
+					visitado.push_back(sistemaAtual);
 					if( sistemaAtual == posicaoDestino){
 
 						fazExploracao(visitado);
@@ -324,10 +336,10 @@ class StarTrek_PP1_Desfecho {
 						for(int i = 0; i< u.arestasAdjacentes.size(); i++) {
 
 							Aresta		adj = u.arestasAdjacentes[ i ];
-							int			comprimentoAtual =  distancias[ sistemaAtual ] + 1 ;
-							if( distancias[ adj.vertice ] > comprimentoAtual ){
+							int			comprimentoAtual =  distancia[ sistemaAtual ] + 1 ;
+							if( distancia[ adj.vertice ] > comprimentoAtual ){
 
-								distancias[ adj.vertice ] = comprimentoAtual;
+								distancia[ adj.vertice ] = comprimentoAtual;
 								fila.enfileira( adj );
 							}
 						}
@@ -339,16 +351,12 @@ class StarTrek_PP1_Desfecho {
 
 		void bfs(){
 
-			vector<double>		distancias;
-			vector<int>			visitados;
-
-			distancias.assign( grafoGalaxia->qtdVertices + 1, infinito );
-			visitados.assign( grafoGalaxia->qtdVertices + 1, false );
-			distancias[posicaoAtual] = 0;
-			//implementar fila de prioridades::
+			distancia.assign( grafoGalaxia->qtdVertices + 1, infinito );
+			distancia[posicaoAtual] = 0;
+			
 			Fila < Aresta > fila;
-			fila.enfileira( Aresta( posicaoAtual, distancias[ posicaoAtual ] ) );
-			bfsBFS( distancias,visitados, fila );
+			fila.enfileira( Aresta( posicaoAtual, distancia[ posicaoAtual ] ) );
+			bfsBFS( fila );
 		}
 
 		double getMenorCusto(){
