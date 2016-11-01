@@ -23,10 +23,15 @@ class Aresta{
 			vertice = pDest;
 			peso = pPeso;
 		}
+		
+		
+		bool operator<(Aresta b){
+			return this->vertice < b.vertice;
+		}
 };
 
-bool comp(const Aresta& a, const Aresta& b){
-			return a.vertice < b.vertice;
+bool comp( Aresta a, Aresta b){
+	return a < b;
 }
 
 
@@ -449,7 +454,7 @@ class StarTrek_PP1_Desfecho {
 
 
 		void posExecute(){
-			//grafoGalaxia->print();
+			grafoGalaxia->print();
 			cout << getMenorCusto() <<endl;
 			limparMemoria();
 		}
