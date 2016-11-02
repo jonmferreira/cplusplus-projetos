@@ -81,7 +81,7 @@ class Vertice{
 
 		void print(){
 			
-			for(int i=0;i< arestasAdjacentes.size();i++){
+			for(int i=0;i< (int)arestasAdjacentes.size();i++){
 				
 				cout << arestasAdjacentes[i].getVertice() << " ";
 			}
@@ -267,7 +267,7 @@ class Grafo{
 
 		void insereAresta( int origem, int destino, double peso ){
 			
-			if( origem < vertices.size() and destino < vertices.size() ){
+			if( origem < (int)vertices.size() and destino < (int)vertices.size() ){
 
 				vertices[origem].addVisinho(destino, peso );
 				vertices[destino].addVisinho(origem, peso );
@@ -291,7 +291,7 @@ class Grafo{
 
 		void print(){
 			
-			for(int i=1;i<vertices.size();i++){
+			for(int i=1;i< (int)vertices.size();i++){
 				
 				cout << i <<": ";
 				vertices [i].print();
@@ -302,7 +302,7 @@ class Grafo{
 
 		void limparMemoria(){
 			
-			for(int i=0 ;i< vertices.size();i++){
+			for(int i=0 ;i< (int)vertices.size();i++){
 				
 				vertices[i].limparMemoria();
 			}
@@ -520,7 +520,7 @@ class StarTrek_PP1_Desfecho {
 
 		void limparMemoria(){
 
-			for(int i=0; i < sistemasPlanetarios.size() ; i++){
+			for(int i=0; i < (int) sistemasPlanetarios.size() ; i++){
 
 				sistemasPlanetarios[i].limparMemoria();
 			}
