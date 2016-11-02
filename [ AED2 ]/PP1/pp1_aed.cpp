@@ -6,10 +6,6 @@
 #define infinito INT_MAX
 using namespace std;
 
-/*
-tamanho de um grafo representa a sua quantidade de arestas
-Ordem de um grafo sao o numero de vertices.
-*/
 
 class Aresta{
 	
@@ -204,7 +200,6 @@ class Grafo{
 
             if( not visitado[origem] ){
             	
-                cout << " "<<origem<<" ";
                 visitado[origem] = true;
                 Vertice planeta = vertices[origem];
                 int dimensao = (int) planeta.getArestasAdjacentes().size();
@@ -229,9 +224,7 @@ class Grafo{
                 visitados.assign( qtdVertices + 1 , false );
                 fezBuscaDFS = true;
                 custoTotalDFS=0;
-               	cout << "rodou um dfs nos vertices: ";
                 dfs(1, visitados);
-                cout<< endl;
             }
         }
 
@@ -329,23 +322,22 @@ class StarTrek_PP1_Desfecho {
 		
 		void faz(int id){
 			while( pai[id] != id ){
-				pilha.insert(pilha.begin(),pilha.size() ,id);
+				pilha.insert(pilha.begin(),id);
+				id=pai[id];
 			}
-			pilha.insert(pilha.begin(),pilha.size() ,id);
+			pilha.insert(pilha.begin(),id);
 		}
 
 		void fazExploracao(){
 			
 			custoMenor = 0 ;
-			int dimensao = ( int ) visitado.size(); 
+			faz(posicaoDestino);
+			int dimensao = ( int ) pilha.size(); 
 			for( int i = 0; i < dimensao ;i++ ){
 				
-				Grafo* sistema = &sistemasPlanetarios[ visitado[i] ];
-				cout<< "vizitando sistema : "<< visitado[i] <<endl;
+				Grafo* sistema = &sistemasPlanetarios[ pilha[i] ];
 				custoMenor += (sistema->getCustoDFS());
 			}
-			//custoMenor = 0;
-			
 		}
 
 
@@ -489,7 +481,6 @@ class StarTrek_PP1_Desfecho {
 				Grafo *grafo = new Grafo(ordem, tamanho);
 				
 				mapearGrafoPonderado(*grafo);
-				cout << "\nsistema: "<<i+1<<" | custo:" <<grafo->getCustoDFS()<<endl;
 				sistemasPlanetarios.push_back(*grafo);
 			}
 		}
@@ -525,8 +516,9 @@ class StarTrek_PP1_Desfecho {
 
 		void posExecute(){
 			
-			grafoGalaxia->print();
-			cout << getMenorCusto() <<endl;
+			cout << fixed <<setprecision(1);
+			double custo =  getMenorCusto();
+			cout << custo  <<endl;
 			limparMemoria();
 		}
 
