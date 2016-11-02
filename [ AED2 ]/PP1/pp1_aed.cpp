@@ -324,7 +324,15 @@ class StarTrek_PP1_Desfecho {
 		
 		vector<int>			visitado;
 		vector<int>			distancia;
-
+		vector<int>			pai;
+		vector<int>			pilha;
+		
+		void faz(int id){
+			while( pai[id] != id ){
+				pilha.insert(pilha.begin(),pilha.size() ,id);
+			}
+			pilha.insert(pilha.begin(),pilha.size() ,id);
+		}
 
 		void fazExploracao(){
 			
@@ -336,6 +344,8 @@ class StarTrek_PP1_Desfecho {
 				cout<< "vizitando sistema : "<< visitado[i] <<endl;
 				custoMenor += (sistema->getCustoDFS());
 			}
+			//custoMenor = 0;
+			
 		}
 
 
@@ -364,9 +374,7 @@ class StarTrek_PP1_Desfecho {
 
 
 		void bfsBFS( Fila< Aresta >& fila){
-
-			bool fezexploracao = false;
-			while( not fila.filaVazia() and not fezexploracao ){
+			while( not fila.filaVazia() ){
 
 				Aresta 		aresta;
 				int 		sistemaAtual;
@@ -375,16 +383,15 @@ class StarTrek_PP1_Desfecho {
 				if( not foiVisitado(sistemaAtual) and ehAmigo(sistemaAtual) ){
 
 					visitado.push_back(sistemaAtual);
-					//fazExploracao();
-					//fezexploracao = true;
-					Vertice 	u = grafoGalaxia->getArrayVertices() [ sistemaAtual ];
-					int 		dimensao = (int) u.getArestasAdjacentes().size();
+					Vertice 	sistemaPlanetario = grafoGalaxia->getArrayVertices() [ sistemaAtual ];
+					int 		dimensao = (int) sistemaPlanetario.getArestasAdjacentes().size();
 					for( int i = 0; i< dimensao; i++) {
 
-						Aresta	adj = u.getArestasAdjacentes()[ i ];
+						Aresta	adj = sistemaPlanetario.getArestasAdjacentes()[ i ];
 						int		comprimentoAtual =  distancia[ sistemaAtual ] + 1 ;
 						if( distancia[ adj.getVertice() ] > comprimentoAtual ){
-
+							
+							pai[ adj.getVertice() ] = sistemaAtual;
 							distancia[ adj.getVertice() ] = comprimentoAtual;
 							fila.enfileira( adj );
 						}
@@ -398,7 +405,7 @@ class StarTrek_PP1_Desfecho {
 
 			distancia.assign( grafoGalaxia->getOrdem() + 1, infinito );
 			distancia[posicaoAtual] = 0;
-			
+			for(int i=0; i<  grafoGalaxia->getOrdem() + 1;i++ ) pai.push_back(i);
 			Fila < Aresta > fila;
 			fila.enfileira( Aresta( posicaoAtual, distancia[ posicaoAtual ] ) );
 			bfsBFS( fila );
@@ -450,7 +457,7 @@ class StarTrek_PP1_Desfecho {
 
 
 		void processaEntrada_Inimigos(){
-
+			
 			int		nInimigos;
 			cin >>  nInimigos;
 			for(int i=0;i<nInimigos;i++){
@@ -484,6 +491,19 @@ class StarTrek_PP1_Desfecho {
 				mapearGrafoPonderado(*grafo);
 				cout << "\nsistema: "<<i+1<<" | custo:" <<grafo->getCustoDFS()<<endl;
 				sistemasPlanetarios.push_back(*grafo);
+			}
+		}
+		
+		void testePilha(){
+			
+			pilha.push_back(1);
+			pilha.push_back(2);
+			pilha.insert(pilha.begin(),9);
+			pilha.insert(pilha.begin(),19);
+			pilha.insert(pilha.begin()+pilha.size(),8);
+			cout<< "teste do funcionamento da pilha\n"<<endl;
+			for(int i=0; i<(int)pilha.size();i++){
+				cout << pilha[i]<<endl;
 			}
 		}
 
