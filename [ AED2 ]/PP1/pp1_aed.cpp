@@ -11,17 +11,35 @@ tamanho de um grafo representa a sua quantidade de arestas
 Ordem de um grafo sao o numero de vertices.
 */
 
-
 class Aresta{
-	public:
+	
+	private:
+		
 		int			vertice;
 		double		peso;
+		
+	public:
+		
+		
 		Aresta(){}
 
 
 		Aresta(int pDest, double pPeso){
+			
 			vertice = pDest;
 			peso = pPeso;
+		}
+		
+		
+		int getVertice(){
+			
+			return vertice;
+		}
+		
+		
+		double getPeso(){
+			
+			return peso;
 		}
 		
 		
@@ -37,18 +55,24 @@ bool comp( Aresta a, Aresta b){
 
 class Vertice{
 	private:
-			
+		
+		vector<Aresta>	arestasAdjacentes;
 
 	public :
-
-		vector<Aresta>	arestasAdjacentes;
 
 
 		Vertice(){
 		}
+		
+		
+		vector<Aresta> getArestasAdjacentes(){
+			
+			return arestasAdjacentes;
+		}
 
 
 		void addVisinho(int visinho, double peso){
+			
 			Aresta		aresta( visinho, peso );
 			arestasAdjacentes.push_back( aresta );
 			stable_sort( arestasAdjacentes.begin(),arestasAdjacentes.end(), comp );
@@ -56,13 +80,16 @@ class Vertice{
 
 
 		void print(){
+			
 			for(int i=0;i< arestasAdjacentes.size();i++){
-				cout << arestasAdjacentes[i].vertice << " ";
+				
+				cout << arestasAdjacentes[i].getVertice() << " ";
 			}
 		}
 
 
 		void limparMemoria(){
+			
 			arestasAdjacentes.clear();
 		}
 };
@@ -70,86 +97,86 @@ class Vertice{
 
 template < class T >
 class Posicao{
-
-private:
-
-	T dado;
-	Posicao *prox;
-
-public:
-
-
-	Posicao(){
-		prox = NULL;
-	}
-
-
-	T getValor(){
 	
-    	return this->dado;
-	}
-
-
-	Posicao *getProx(){
+	private:
 	
-    	return this->prox;
-	}
-
-
-	void setValor(T valor){
+		T dado;
+		Posicao *prox;
 	
-		dado = valor;
-	}
-
-
-	void setProx(Posicao<T>* prox){
+	public:
 	
-    	this->prox=prox;
-	}
+	
+		Posicao(){
+			prox = NULL;
+		}
+	
+	
+		T getValor(){
+		
+	    	return this->dado;
+		}
+	
+	
+		Posicao *getProx(){
+		
+	    	return this->prox;
+		}
+	
+	
+		void setValor(T valor){
+		
+			dado = valor;
+		}
+	
+	
+		void setProx(Posicao<T>* prox){
+		
+	    	this->prox=prox;
+		}
 };
 
 
 template <class T>
 class Fila{
-
-private:
-
-	Posicao<T>*		frente;
-	Posicao<T>*		tras;
-
-public:
-
-	Fila(){
 	
-    	frente = new Posicao<T>;
-    	tras = frente;
-	}
-
-
-	bool filaVazia(){
+	private:
 	
-    	return (frente == tras);
-	}
-
-
-	void enfileira(T valor ){
+		Posicao<T>*		frente;
+		Posicao<T>*		tras;
 	
-    	tras->setValor( valor );
-    	tras->setProx( new Posicao<T> );
-    	tras = tras->getProx();
-	}
-
-
-	void desenfileira( T &x){
+	public:
 	
-    	if( not filaVazia() ){
-    		
-    		Posicao<T> *aux = frente;
-    		x = frente->getValor();
-        	frente = frente->getProx();
-        	delete aux;
-    	}
-	}
+		Fila(){
+		
+	    	frente = new Posicao<T>;
+	    	tras = frente;
+		}
+	
+	
+		bool filaVazia(){
+		
+	    	return (frente == tras);
+		}
+	
+	
+		void enfileira(T valor ){
+		
+	    	tras->setValor( valor );
+	    	tras->setProx( new Posicao<T> );
+	    	tras = tras->getProx();
+		}
+	
+	
+		void desenfileira( T &x){
+		
+	    	if( not filaVazia() ){
+	    		
+	    		Posicao<T> *aux = frente;
+	    		x = frente->getValor();
+	        	frente = frente->getProx();
+	        	delete aux;
+	    	}
+		}
 };
 
 
@@ -157,6 +184,10 @@ public:
 class Grafo{
 	
 	private:
+
+		int					qtdVertices;
+		int					qtdArestas;
+		vector< Vertice >	vertices;
 
         double custoTotalDFS;
         bool fezBuscaDFS;
@@ -167,7 +198,7 @@ class Grafo{
                 fezBuscaDFS = false;
                 custoTotalDFS = -1;
         }
-
+        
 
         void dfs( int origem, vector<bool>& visitado ){
 
@@ -176,18 +207,14 @@ class Grafo{
                 cout << " "<<origem<<" ";
                 visitado[origem] = true;
                 Vertice planeta = vertices[origem];
-                int dimensao = (int) planeta.arestasAdjacentes.size();
+                int dimensao = (int) planeta.getArestasAdjacentes().size();
                 for( int i=0; i< dimensao ;i++){
                 	
-                    Aresta caminho = planeta.arestasAdjacentes[i];
-                    //cout<< "testando visinho de vertice: "<< caminho.vertice<< " de peso "<< caminho.peso <<endl;
-                    if( not visitado[ caminho.vertice ] ){
+                    Aresta caminho = planeta.getArestasAdjacentes()[i];
+                    if( not visitado[ caminho.getVertice() ] ){
                     	
-                        //cout << "		ok! visinho nao visitado!\n		vamos visitar!\n";
-                        //cout << "custo acumulado deste sistema ate aqui::"<< custoTotalDFS <<endl;
-                        custoTotalDFS += caminho.peso;
-                        //cout<<"custo passa a ser : "<< custoTotalDFS<<endl;
-                        dfs( caminho.vertice, visitado );
+                        custoTotalDFS += caminho.getPeso();
+                        dfs( caminho.getVertice() , visitado );
                     }
                 }
             }
@@ -202,7 +229,6 @@ class Grafo{
                 visitados.assign( qtdVertices + 1 , false );
                 fezBuscaDFS = true;
                 custoTotalDFS=0;
-                //cout <<"\npassei por aqui"<<endl;
                	cout << "rodou um dfs nos vertices: ";
                 dfs(1, visitados);
                 cout<< endl;
@@ -210,11 +236,7 @@ class Grafo{
         }
 
 	public:
-
-		int					qtdVertices;
-		int					qtdArestas;
-		vector< Vertice >	vertices;
-
+		
 
 		Grafo( int n , int m ){
 			
@@ -222,6 +244,24 @@ class Grafo{
 				qtdVertices = n;
 				qtdArestas = m;
 				vertices.assign( qtdVertices + 1, Vertice());
+		}
+		
+        
+        int getOrdem(){
+        	
+        	return qtdVertices;
+		}
+		
+		
+		int getTamanho(){
+			
+			return qtdArestas;
+		}
+		
+		
+		vector<Vertice> getArrayVertices(){
+			
+			return vertices;
 		}
 
 
@@ -286,18 +326,15 @@ class StarTrek_PP1_Desfecho {
 		vector<int>			distancia;
 
 
-		void fazExploracao(vector<int>& visitado){
+		void fazExploracao(){
 			
 			custoMenor = 0 ;
 			int dimensao = ( int ) visitado.size(); 
 			for( int i = 0; i < dimensao ;i++ ){
 				
 				Grafo* sistema = &sistemasPlanetarios[ visitado[i] ];
-				//cout << "somando custos:\n sistema a ser analisado: "<< i<<endl;
-				//cout <<"custo ate aqui da galaxia: "<<custoMenor;
 				cout<< "vizitando sistema : "<< visitado[i] <<endl;
 				custoMenor += (sistema->getCustoDFS());
-				//cout << "\n O custo apos analise:: "<< custoMenor<<endl;
 			}
 		}
 
@@ -305,8 +342,8 @@ class StarTrek_PP1_Desfecho {
 		bool ehAmigo(int sistemaID){
 
 			bool ehAliado = true;
-
-			for(int i=0; i < sistemasInimigos.size()  and ehAliado ; i++ ){
+			int dimensao = (int) sistemasInimigos.size();
+			for(int i=0; i <  dimensao and ehAliado ; i++ ){
 
 				ehAliado = ( sistemaID != sistemasInimigos[ i ] ) and ehAliado;
 			}
@@ -332,28 +369,24 @@ class StarTrek_PP1_Desfecho {
 			while( not fila.filaVazia() and not fezexploracao ){
 
 				Aresta 		aresta;
+				int 		sistemaAtual;
 				fila.desenfileira(aresta);
-				int 		sistemaAtual = aresta.vertice;
+				sistemaAtual = aresta.getVertice();
 				if( not foiVisitado(sistemaAtual) and ehAmigo(sistemaAtual) ){
 
 					visitado.push_back(sistemaAtual);
-					if( sistemaAtual == posicaoDestino){
+					//fazExploracao();
+					//fezexploracao = true;
+					Vertice 	u = grafoGalaxia->getArrayVertices() [ sistemaAtual ];
+					int 		dimensao = (int) u.getArestasAdjacentes().size();
+					for( int i = 0; i< dimensao; i++) {
 
-						fazExploracao(visitado);
-						fezexploracao = true;
-					}
-					else{
+						Aresta	adj = u.getArestasAdjacentes()[ i ];
+						int		comprimentoAtual =  distancia[ sistemaAtual ] + 1 ;
+						if( distancia[ adj.getVertice() ] > comprimentoAtual ){
 
-						Vertice 		u = grafoGalaxia->vertices [ sistemaAtual ];
-						for(int i = 0; i< u.arestasAdjacentes.size(); i++) {
-
-							Aresta		adj = u.arestasAdjacentes[ i ];
-							int			comprimentoAtual =  distancia[ sistemaAtual ] + 1 ;
-							if( distancia[ adj.vertice ] > comprimentoAtual ){
-
-								distancia[ adj.vertice ] = comprimentoAtual;
-								fila.enfileira( adj );
-							}
+							distancia[ adj.getVertice() ] = comprimentoAtual;
+							fila.enfileira( adj );
 						}
 					}
 				}
@@ -363,12 +396,13 @@ class StarTrek_PP1_Desfecho {
 
 		void bfs(){
 
-			distancia.assign( grafoGalaxia->qtdVertices + 1, infinito );
+			distancia.assign( grafoGalaxia->getOrdem() + 1, infinito );
 			distancia[posicaoAtual] = 0;
 			
 			Fila < Aresta > fila;
 			fila.enfileira( Aresta( posicaoAtual, distancia[ posicaoAtual ] ) );
 			bfsBFS( fila );
+			fazExploracao();
 		}
 
 
@@ -381,7 +415,7 @@ class StarTrek_PP1_Desfecho {
 		void mapearGrafo(Grafo& grafo){
 			
 			int origem, destino;
-			for(int i=1 ; i <= grafo.qtdArestas; i++ ){
+			for(int i=1 ; i <= grafo.getTamanho(); i++ ){
 
 				cin >> origem >> destino;
 				grafo.insereAresta( origem, destino, 0 );
@@ -395,7 +429,8 @@ class StarTrek_PP1_Desfecho {
 			int 	destino;
 			double 	peso;
 
-			for(int i=1 ; i <= grafo.qtdArestas; i++ ){
+			for(int i=1 ; i <= grafo.getTamanho(); i++ ){
+				
 				cin >> origem >> destino >> peso;
 				grafo.insereAresta( origem, destino, peso );
 			}
@@ -405,10 +440,8 @@ class StarTrek_PP1_Desfecho {
 
 		void processaEntrada_Galaxia(){
 			
-			//cout << "Lendo Galaxia\n";
 			int 	numVertices;
 			int		quantidadeArestas;
-			//cout << "Qual a ordem e o tamanho do grafo? ";
 			cin >> numVertices >> quantidadeArestas;
 
 			grafoGalaxia = new Grafo( numVertices, quantidadeArestas );
@@ -418,10 +451,8 @@ class StarTrek_PP1_Desfecho {
 
 		void processaEntrada_Inimigos(){
 
-			//cout << "Quantos inimigos temos? e Quem sao? ";
 			int		nInimigos;
-			cin >> nInimigos;
-
+			cin >>  nInimigos;
 			for(int i=0;i<nInimigos;i++){
 				
 				int 	inimigo;
@@ -435,8 +466,6 @@ class StarTrek_PP1_Desfecho {
 
 			processaEntrada_Galaxia();
 			processaEntrada_Inimigos();
-
-			//cout << "onde voce esta e pra onde quer ir?"<<endl;
 			cin >> posicaoAtual >> posicaoDestino ;
 		}
 
@@ -444,20 +473,16 @@ class StarTrek_PP1_Desfecho {
 		void processaEntrada_2aEtapa(){
 
 			Grafo grafozero(0,0);
-
 			sistemasPlanetarios.push_back(grafozero);
-
-			for(int i=0; i < grafoGalaxia->qtdVertices; i++ ){
+			for(int i=0; i < grafoGalaxia->getOrdem(); i++ ){
 				
 				int 	ordem;
 				int		tamanho;
-
-				//cout << "sistema "<<i+1 <<":"<< endl;
 				cin >> ordem >> tamanho;
-
 				Grafo *grafo = new Grafo(ordem, tamanho);
+				
 				mapearGrafoPonderado(*grafo);
-
+				cout << "\nsistema: "<<i+1<<" | custo:" <<grafo->getCustoDFS()<<endl;
 				sistemasPlanetarios.push_back(*grafo);
 			}
 		}
