@@ -37,11 +37,9 @@ bool comp( Aresta a, Aresta b){
 
 class Vertice{
 	private:
-	
-		
+			
 
 	public :
-
 
 		vector<Aresta>	arestasAdjacentes;
 
@@ -157,6 +155,7 @@ public:
 
 
 class Grafo{
+	
 	private:
 
         double custoTotalDFS;
@@ -173,13 +172,17 @@ class Grafo{
         void dfs( int origem, vector<bool>& visitado ){
 
             if( not visitado[origem] ){
+            	
                 cout << " "<<origem<<" ";
                 visitado[origem] = true;
                 Vertice planeta = vertices[origem];
-                for( int i=0; i< planeta.arestasAdjacentes.size();i++){
+                int dimensao = (int) planeta.arestasAdjacentes.size();
+                for( int i=0; i< dimensao ;i++){
+                	
                     Aresta caminho = planeta.arestasAdjacentes[i];
                     //cout<< "testando visinho de vertice: "<< caminho.vertice<< " de peso "<< caminho.peso <<endl;
                     if( not visitado[ caminho.vertice ] ){
+                    	
                         //cout << "		ok! visinho nao visitado!\n		vamos visitar!\n";
                         //cout << "custo acumulado deste sistema ate aqui::"<< custoTotalDFS <<endl;
                         custoTotalDFS += caminho.peso;
@@ -214,6 +217,7 @@ class Grafo{
 
 
 		Grafo( int n , int m ){
+			
 				Grafo();
 				qtdVertices = n;
 				qtdArestas = m;
@@ -222,6 +226,7 @@ class Grafo{
 
 
 		void insereAresta( int origem, int destino, double peso ){
+			
 			if( origem < vertices.size() and destino < vertices.size() ){
 
 				vertices[origem].addVisinho(destino, peso );
@@ -229,21 +234,25 @@ class Grafo{
 				fezBuscaDFS = false;
 
 			}
+			
 			else{
+				
 				cout <<	"Erro!!!\n	Parametros invalidos\n";
 			}
 		}
+
 
 		double getCustoDFS(){
 
 			dfs();
 			return custoTotalDFS;
-
 		}
 
 
 		void print(){
+			
 			for(int i=1;i<vertices.size();i++){
+				
 				cout << i <<": ";
 				vertices [i].print();
 				cout<< "\n------\n";
@@ -252,7 +261,9 @@ class Grafo{
 
 
 		void limparMemoria(){
+			
 			for(int i=0 ;i< vertices.size();i++){
+				
 				vertices[i].limparMemoria();
 			}
 			vertices.clear();
@@ -276,16 +287,17 @@ class StarTrek_PP1_Desfecho {
 
 
 		void fazExploracao(vector<int>& visitado){
+			
 			custoMenor = 0 ;
-			for( int i = 0; i < visitado.size(); i++){
-				if( visitado[i] == true or i == posicaoDestino){
-					Grafo* sistema = &sistemasPlanetarios[i];
-					//cout << "somando custos:\n sistema a ser analisado: "<< i<<endl;
-					//cout <<"custo ate aqui da galaxia: "<<custoMenor;
-					cout<< "vizitando sistema : "<< i<<endl;
-					custoMenor += (sistema->getCustoDFS());
-					//cout << "\n O custo apos analise:: "<< custoMenor<<endl;
-				}
+			int dimensao = ( int ) visitado.size(); 
+			for( int i = 0; i < dimensao ;i++ ){
+				
+				Grafo* sistema = &sistemasPlanetarios[ visitado[i] ];
+				//cout << "somando custos:\n sistema a ser analisado: "<< i<<endl;
+				//cout <<"custo ate aqui da galaxia: "<<custoMenor;
+				cout<< "vizitando sistema : "<< visitado[i] <<endl;
+				custoMenor += (sistema->getCustoDFS());
+				//cout << "\n O custo apos analise:: "<< custoMenor<<endl;
 			}
 		}
 
@@ -359,12 +371,15 @@ class StarTrek_PP1_Desfecho {
 			bfsBFS( fila );
 		}
 
+
 		double getMenorCusto(){
+			
 			bfs();
 			return custoMenor;
 		}
 
 		void mapearGrafo(Grafo& grafo){
+			
 			int origem, destino;
 			for(int i=1 ; i <= grafo.qtdArestas; i++ ){
 
@@ -375,6 +390,7 @@ class StarTrek_PP1_Desfecho {
 
 
 		void mapearGrafoPonderado(Grafo& grafo){
+			
 			int		origem;
 			int 	destino;
 			double 	peso;
@@ -388,6 +404,7 @@ class StarTrek_PP1_Desfecho {
 
 
 		void processaEntrada_Galaxia(){
+			
 			//cout << "Lendo Galaxia\n";
 			int 	numVertices;
 			int		quantidadeArestas;
@@ -406,6 +423,7 @@ class StarTrek_PP1_Desfecho {
 			cin >> nInimigos;
 
 			for(int i=0;i<nInimigos;i++){
+				
 				int 	inimigo;
 				cin >> inimigo;
 				sistemasInimigos.push_back(inimigo);
@@ -430,6 +448,7 @@ class StarTrek_PP1_Desfecho {
 			sistemasPlanetarios.push_back(grafozero);
 
 			for(int i=0; i < grafoGalaxia->qtdVertices; i++ ){
+				
 				int 	ordem;
 				int		tamanho;
 
@@ -441,16 +460,15 @@ class StarTrek_PP1_Desfecho {
 
 				sistemasPlanetarios.push_back(*grafo);
 			}
-
 		}
 
 	public:
 
 
 		StarTrek_PP1_Desfecho(){
+			
 			custoMenor= infinito;
 		}
-
 
 
 		void processaEntrada(){
@@ -460,8 +478,8 @@ class StarTrek_PP1_Desfecho {
 		}
 
 
-
 		void posExecute(){
+			
 			grafoGalaxia->print();
 			cout << getMenorCusto() <<endl;
 			limparMemoria();
@@ -486,7 +504,6 @@ class StarTrek_PP1_Desfecho {
 			sistemasInimigos.clear();
 			sistemasPlanetarios.clear();
 		}
-
 };
 
 
@@ -494,6 +511,5 @@ int main(){
 
 	StarTrek_PP1_Desfecho solucao ;
 	solucao.execute();
-
 	return 0;
 }
