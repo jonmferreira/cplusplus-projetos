@@ -1,11 +1,60 @@
-#include<bits/stdc++.h>//tirar depois
 #include<iostream>
 #include<vector>
 #include<climits>
+#include <iomanip>
 
 #define infinito INT_MAX
 using namespace std;
 
+
+class Ordenacao{
+	
+	private:
+		
+		template < class T >
+		static void troca( T& a, T& b ) {
+			
+			T aux = a;
+			a = b;
+			b = aux;
+		}
+		
+		
+	public:
+		
+		const static int Crescente		= 1 ;
+		const static int Decrescente 	= 2;
+		
+		template < class T >		
+		static void BubleSort( vector<T> array , const int sentido ) {
+			
+			if( not array.empty() ){
+			
+				int dimensao = ( int )array.size();
+				for( int i = dimensao - 1; i >= 1 ; i-- ){
+					
+					for( int j = 0; j < i; j++ ){
+						
+						if ( sentido == Crescente ){
+							
+							if( array[ j ] < array[ j + 1 ]  ){
+								
+								Ordenacao::troca( array[j], array[j+1] );
+							}
+						}
+						else{
+							
+							if( array[ j ] > array[ j + 1 ]  ){
+								
+								Ordenacao::troca( array[j], array[j+1] );
+							}
+						}
+					}
+				}
+			}
+		}
+			
+};
 
 class Aresta{
 	
@@ -39,9 +88,17 @@ class Aresta{
 		}
 		
 		
-		bool operator<(Aresta b){
+		bool operator<(Aresta b) const{
 			return this->vertice < b.vertice;
 		}
+		
+		
+		bool operator>(Aresta b) const{
+			return this->vertice > b.vertice;
+		}
+		
+		
+		
 };
 
 bool comp( Aresta a, Aresta b){
@@ -71,7 +128,7 @@ class Vertice{
 			
 			Aresta		aresta( visinho, peso );
 			arestasAdjacentes.push_back( aresta );
-			stable_sort( arestasAdjacentes.begin(),arestasAdjacentes.end(), comp );
+			Ordenacao::BubleSort( arestasAdjacentes, Ordenacao::Crescente); 
 		}
 
 
