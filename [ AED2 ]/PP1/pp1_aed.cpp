@@ -31,31 +31,61 @@ class Ordenacao{
 			if( not array.empty() ){
 			
 				int dimensao = ( int )array.size();
-				for( int i = dimensao - 1; i >= 1 ; i-- ){
+				if( sentido == Crescente ){
 					
-					for( int j = 0; j < i; j++ ){
+					for( int i = dimensao - 1; i >= 1 ; i-- ){
 						
-						if ( sentido == Crescente ){
+						for( int j = 0; j < i; j++ ){
 							
 							if( array[ j ] < array[ j + 1 ]  ){
 								
 								Ordenacao::troca( array[j], array[j+1] );
 							}
 						}
-						else{
+					}					
+				}
+				else{
+					
+					for( int i = dimensao - 1; i >= 1 ; i-- ){
+						
+						for( int j = 0; j < i; j++ ){
 							
 							if( array[ j ] > array[ j + 1 ]  ){
-								
+									
 								Ordenacao::troca( array[j], array[j+1] );
 							}
 						}
-					}
+					}	
 				}
 			}
 		}
+		
+		template < class T >
+		static void ShellSort( vector<T> vet, const int sentido);
 			
 };
 
+template< class T >
+void Ordenacao::ShellSort( vector<T> vet, const int sentido){
+	
+	int		i, flag = 1;
+	T		aux;
+	int 	tam = (int)vet.size();
+	int 	d = tam;
+	while( flag || (d > 1)) {
+	
+		flag = 0;
+		d = ( d + 1 ) / 2;
+		for (i = 0; i < (tam - d); i++) {
+		
+			if ( sentido == Crescente? ( vet[i + d] < vet[i] ) : ( vet[i + d] < vet[i] ) ) {
+		
+				troca( vet[i + d], vet[i] );
+				flag = 1;
+			}
+	}
+}
+}
 class Aresta{
 	
 	private:
@@ -89,21 +119,16 @@ class Aresta{
 		
 		
 		bool operator<(Aresta b) const{
+			
 			return this->vertice < b.vertice;
 		}
 		
 		
 		bool operator>(Aresta b) const{
+			
 			return this->vertice > b.vertice;
 		}
-		
-		
-		
 };
-
-bool comp( Aresta a, Aresta b){
-	return a < b;
-}
 
 
 class Vertice{
@@ -128,7 +153,7 @@ class Vertice{
 			
 			Aresta		aresta( visinho, peso );
 			arestasAdjacentes.push_back( aresta );
-			Ordenacao::BubleSort( arestasAdjacentes, Ordenacao::Crescente); 
+			Ordenacao::ShellSort( arestasAdjacentes, Ordenacao::Crescente); 
 		}
 
 
@@ -259,7 +284,7 @@ class Grafo{
             	
                 visitado[origem] = true;
                 Vertice planeta = vertices[origem];
-                int dimensao = (int) planeta.getArestasAdjacentes().size();
+				int	dimensao = (int) planeta.getArestasAdjacentes().size();
                 for( int i=0; i< dimensao ;i++){
                 	
                     Aresta caminho = planeta.getArestasAdjacentes()[i];
@@ -365,12 +390,12 @@ class StarTrek_PP1_Desfecho {
 
 	private:
 
-		int 				posicaoAtual;
-		int 				posicaoDestino;
+		int					posicaoAtual;
+		int					posicaoDestino;
 		Grafo*				grafoGalaxia;
 		vector<Grafo>		sistemasPlanetarios;
 		vector<int>			sistemasInimigos;
-		double 				custoMenor;
+		double				custoMenor;
 		
 		vector<int>			visitado;
 		vector<int>			distancia;
@@ -378,7 +403,9 @@ class StarTrek_PP1_Desfecho {
 		vector<int>			pilha;
 		
 		void faz(int id){
+			
 			while( pai[id] != id ){
+				
 				pilha.insert(pilha.begin(),id);
 				id=pai[id];
 			}
@@ -389,7 +416,7 @@ class StarTrek_PP1_Desfecho {
 			
 			custoMenor = 0 ;
 			faz(posicaoDestino);
-			int dimensao = ( int ) pilha.size(); 
+			int	dimensao = ( int ) pilha.size(); 
 			for( int i = 0; i < dimensao ;i++ ){
 				
 				Grafo* sistema = &sistemasPlanetarios[ pilha[i] ];
@@ -401,7 +428,7 @@ class StarTrek_PP1_Desfecho {
 		bool ehAmigo(int sistemaID){
 
 			bool ehAliado = true;
-			int dimensao = (int) sistemasInimigos.size();
+			int	dimensao = (int) sistemasInimigos.size();
 			for(int i=0; i <  dimensao and ehAliado ; i++ ){
 
 				ehAliado = ( sistemaID != sistemasInimigos[ i ] ) and ehAliado;
@@ -413,7 +440,7 @@ class StarTrek_PP1_Desfecho {
 		bool foiVisitado(int elem){
 			
 			bool foi = false;
-			int dimensaoVisitado = (int)visitado.size();
+			int	dimensaoVisitado = (int)visitado.size();
 			for( int i=0; i < dimensaoVisitado and not foi;i++ ){
 				
 				foi = ( visitado[i] == elem ) and not foi;
@@ -507,12 +534,12 @@ class StarTrek_PP1_Desfecho {
 
 		void processaEntrada_Inimigos(){
 			
-			int		nInimigos;
-			cin >>  nInimigos;
+			int	nInimigos;
+			cin >>	nInimigos;
 			for(int i=0;i<nInimigos;i++){
 				
-				int 	inimigo;
-				cin >> inimigo;
+				int	inimigo;
+				cin >>	inimigo;
 				sistemasInimigos.push_back(inimigo);
 			}
 		}
