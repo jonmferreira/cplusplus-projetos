@@ -25,45 +25,104 @@ class Ordenacao{
 		const static int Crescente		= 1 ;
 		const static int Decrescente 	= 2;
 		
+		
 		template < class T >		
-		static void BubleSort( vector<T> array , const int sentido ) {
-			
-			if( not array.empty() ){
-			
-				int dimensao = ( int )array.size();
-				if( sentido == Crescente ){
-					
-					for( int i = dimensao - 1; i >= 1 ; i-- ){
-						
-						for( int j = 0; j < i; j++ ){
-							
-							if( array[ j ] < array[ j + 1 ]  ){
-								
-								Ordenacao::troca( array[j], array[j+1] );
-							}
-						}
-					}					
-				}
-				else{
-					
-					for( int i = dimensao - 1; i >= 1 ; i-- ){
-						
-						for( int j = 0; j < i; j++ ){
-							
-							if( array[ j ] > array[ j + 1 ]  ){
-									
-								Ordenacao::troca( array[j], array[j+1] );
-							}
-						}
-					}	
-				}
-			}
-		}
+		static void BubleSort( vector<T> array , const int sentido );
+		
 		
 		template < class T >
 		static void ShellSort( vector<T> vet, const int sentido);
+		
+		
+		template < class T >
+		static int QuickSort_Particao ( vector<T>& A, int p, int r ){
+		
+		    T x = A[p];
+		    T tmp = A[r + 1];
+		    A[r + 1] = x;
+		    int i = p;
+		    int j = r + 1;
+		
+		    while (true){
+		
+		        do {
+		
+		        	i++;
+		        } while( A[i] < x );
+		        do {
+		
+		        	j--;
+		        } while( A[j] > x );
+		        if(i < j){
+		
+		        	troca( A[i], A[j] );
+		        }else{
+					
+					troca( A[p], A[j] );
+		            A[r + 1] = tmp;
+		            return j;
+		        }
+		    }
+		}
+		
+		
+		template < class T >
+		static void QuickSort_Recursao(vector<T>& A, int p,int r){
+		
+		    if (p <= r){
+		    	
+			    int q = QuickSort_Particao(A, p, r);
+				QuickSort_Recursao(A, p, q-1);
+				QuickSort_Recursao(A, q + 1, r);
+		    }
+		}
+		
+		template < class T>
+		static void QuickSort( vector<T> array){
 			
+			if( not array.empty() ){
+				int tam = (int) array.size();
+				array.push_back( array[0] );
+				QuickSort_Recursao( array, 0, tam -1  );
+			}
+		}
 };
+
+
+template < class T >		
+void Ordenacao::BubleSort( vector<T> array , const int sentido ) {
+	
+	if( not array.empty() ){
+	
+		int dimensao = ( int )array.size();
+		if( sentido == Crescente ){
+			
+			for( int i = dimensao - 1; i >= 1 ; i-- ){
+				
+				for( int j = 0; j < i; j++ ){
+					
+					if( array[ j ] < array[ j + 1 ]  ){
+						
+						Ordenacao::troca( array[j], array[j+1] );
+					}
+				}
+			}					
+		}
+		else{
+			
+			for( int i = dimensao - 1; i >= 1 ; i-- ){
+				
+				for( int j = 0; j < i; j++ ){
+					
+					if( array[ j ] > array[ j + 1 ]  ){
+							
+						Ordenacao::troca( array[j], array[j+1] );
+					}
+				}
+			}	
+		}
+	}
+}
 
 template< class T >
 void Ordenacao::ShellSort( vector<T> vet, const int sentido){
@@ -74,7 +133,7 @@ void Ordenacao::ShellSort( vector<T> vet, const int sentido){
 	int 	d = tam;
 	while( flag || (d > 1)) {
 	
-		flag = 0;
+		flag = 0; 
 		d = ( d + 1 ) / 2;
 		for (i = 0; i < (tam - d); i++) {
 		
@@ -153,7 +212,7 @@ class Vertice{
 			
 			Aresta		aresta( visinho, peso );
 			arestasAdjacentes.push_back( aresta );
-			Ordenacao::ShellSort( arestasAdjacentes, Ordenacao::Crescente); 
+			Ordenacao::QuickSort( arestasAdjacentes ); 
 		}
 
 
